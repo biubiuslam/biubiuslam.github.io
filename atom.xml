@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://biubiuslam.github.io</id>
     <title>SLAM这件小事</title>
-    <updated>2020-03-03T17:05:09.976Z</updated>
+    <updated>2020-03-03T17:05:39.764Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://biubiuslam.github.io"/>
     <link rel="self" href="https://biubiuslam.github.io/atom.xml"/>
@@ -17,21 +17,15 @@
         </link>
         <updated>2020-03-03T13:59:07.000Z</updated>
         <summary type="html"><![CDATA[<h2 id="安装依赖">安装依赖</h2>
-<p>必须要安装的依赖，通过命令安装</p>
-<pre><code class="language-c++">sudo apt-get install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
-</code></pre>
-<pre><code class="language-c++">sudo apt-get install python-dev python-numpy python3-dev python3-numpy
-sudo apt-get install libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev   //可选择安装，具体参考OpenCV官方说明，这个可能会变！
-</code></pre>
 ]]></summary>
         <content type="html"><![CDATA[<h2 id="安装依赖">安装依赖</h2>
+<!-- more --> 
 <p>必须要安装的依赖，通过命令安装</p>
 <pre><code class="language-c++">sudo apt-get install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
 </code></pre>
 <pre><code class="language-c++">sudo apt-get install python-dev python-numpy python3-dev python3-numpy
 sudo apt-get install libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev   //可选择安装，具体参考OpenCV官方说明，这个可能会变！
 </code></pre>
-<!-- more --> 
 <h2 id="安装opencv4">安装OpenCV4</h2>
 <p>下载OpenCV4的源码安装包，可在OpenCV官方GitHub上面找到，然后解压，新建build文件夹，进入文件夹：</p>
 <pre><code class="language-c++">cmake -DCMAKE_BUILD_TYPE=Release \
