@@ -5,14 +5,14 @@
     
 <meta charset="utf-8" >
 
-<title>Gridea | SLAM这件小事</title>
+<title>SLAM初探一：Linux安装OpenCV4 | SLAM这件小事</title>
 <meta name="description" content="Talk is cheap， Show me the code！">
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css">
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
-<link rel="shortcut icon" href="https://biubiuslam.github.io/favicon.ico?v=1583243707487">
+<link rel="shortcut icon" href="https://biubiuslam.github.io/favicon.ico?v=1583244357754">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.10.0/katex.min.css">
 <link rel="stylesheet" href="https://biubiuslam.github.io/styles/main.css">
 
@@ -30,7 +30,7 @@
   <div class="site-header">
     <div class="left">
       <a href="https://biubiuslam.github.io">
-        <img class="avatar" src="https://biubiuslam.github.io/images/avatar.png?v=1583243707487" alt="" width="32px" height="32px">
+        <img class="avatar" src="https://biubiuslam.github.io/images/avatar.png?v=1583244357754" alt="" width="32px" height="32px">
       </a>
       <a href="https://biubiuslam.github.io">
         <h1 class="site-title">SLAM这件小事</h1>
@@ -78,55 +78,49 @@
 
 
       <div class="content-container">
+        <div class="post-detail">
+          
+          <h2 class="post-title">SLAM初探一：Linux安装OpenCV4</h2>
+          <div class="post-info post-detail-info">
+            <span><i class="icon-calendar-outline"></i> 2020-03-03</span>
+            
+          </div>
+          <div class="post-content">
+            <h2 id="安装依赖">安装依赖</h2>
+<p>必须要安装的依赖，通过命令安装：</p>
+<pre><code>sudo apt-get install build-essential cmake git libgtk2.0-dev pkg-config libavcodec-dev libavformat-dev libswscale-dev
+</code></pre>
+<pre><code>sudo apt-get install python-dev python-numpy python3-dev python3-numpy
+sudo apt-get install libtbb2 libtbb-dev libjpeg-dev libpng-dev libtiff-dev libjasper-dev libdc1394-22-dev   //可选择安装，具体参考OpenCV官方说明，这个可能会变！
+</code></pre>
+<h2 id="安装opencv4">安装OpenCV4</h2>
+<p>下载OpenCV4的源码安装包，可在OpenCV官方GitHub上面找到，然后解压，新建build文件夹，进入文件夹：</p>
+<pre><code>cmake -DCMAKE_BUILD_TYPE=Release \
+-DOPENCV_GENERATE_PKGCONFIG=ON \
+-DCMAKE_INSTALL_PREFIX=/usr/local ..
+</code></pre>
+<p>OpenCV4默认不生成.pc文件，<strong>OPENCV_GENERATE_PKGCONFIG=ON</strong>才会生成。</p>
+<pre><code>sudo make -j8
+sudo make install
+</code></pre>
+<p>然后就是配置c++了,先在/etc/ld.so.conf.d/文件夹下新建一个opencv4.conf，里面写入/usr/local/lib。</p>
+<pre><code>cd /etc/ld.so.conf.d/
+sudo touch opencv4.conf
+sudo sh -c 'echo &quot;/usr/local/lib&quot; &gt; opencv4.conf'
+</code></pre>
+<p>更新pkg-config：<br>
+<code>sudo ldconfig</code><br>
+之后可以在终端输入<strong>pkg-config --libs opencv4</strong>和<strong>pkg-config --cflags opencv4</strong>检验一下是否安装成功。</p>
+<h2 id="opencv的卸载">OpenCV的卸载</h2>
+<p>删掉opencv4.conf文件，然后在源码包下的build文件夹下运行<strong>sudo make uinstall</strong>即可。</p>
 
-        <div class="current-tag-container">
-          <h2 class="title">
-            <i class="icon icon-pricetags-outline"></i> Gridea
-          </h2> 
+          </div>
         </div>
 
         
-<section class="post-item">
-    <div class="content">
-      <a href="https://biubiuslam.github.io/post/hello-gridea">
-        <h2 class="post-title">Hello Gridea</h2>
-      </a>
-      <div class="post-abstract">
-        <p>👏  欢迎使用 <strong>Gridea</strong> ！<br>
-✍️  <strong>Gridea</strong> 一个静态博客写作客户端。你可以用它来记录你的生活、心情、知识、笔记、创意... ...</p>
-
       </div>
-      <div class="post-info">
-        <span><i class="icon icon-calendar-outline"></i> 2018-12-12</span>
-        
-          <span>
-            <i class="icon icon-pricetags-outline"></i>
-            
-              <a href="https://biubiuslam.github.io/tag/YmbJb4G3p">
-                Gridea
-                
-              </a>
-            
-          </span>
-        
-      </div>
-    </div>
-    
-      <a href="https://biubiuslam.github.io/post/hello-gridea">
-        <div class="feature-container" style="background-image: url('https://biubiuslam.github.io/post-images/hello-gridea.png')">
-        </div>
-      </a>
-    
-  </section>
 
-
-<div class="pagination-container">
-  
-  
-</div>
-
-
-      </div>
+      
 
       <div class="site-footer">
   <div class="slogan">Talk is cheap， Show me the code！</div>
