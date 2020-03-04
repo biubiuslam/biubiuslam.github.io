@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://biubiuslam.github.io</id>
     <title>SLAM这件小事</title>
-    <updated>2020-03-04T01:19:48.094Z</updated>
+    <updated>2020-03-04T02:42:32.931Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://biubiuslam.github.io"/>
     <link rel="self" href="https://biubiuslam.github.io/atom.xml"/>
@@ -49,6 +49,109 @@ sudo sh -c 'echo &quot;/usr/local/lib&quot; &gt; opencv4.conf'
 <p>之后可以在终端输入<strong>pkg-config --libs opencv4</strong>和<strong>pkg-config --cflags opencv4</strong>检验一下是否安装成功。</p>
 <h2 id="opencv的卸载">OpenCV的卸载</h2>
 <p>删掉opencv4.conf文件，然后在源码包下的build文件夹下运行<strong>sudo make uinstall</strong>即可。</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SLAM初探系列二: 踩坑Astra Pro]]></title>
+        <id>https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-er-cai-keng-astra-pro/</id>
+        <link href="https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-er-cai-keng-astra-pro/">
+        </link>
+        <updated>2019-12-04T12:40:34.000Z</updated>
+        <content type="html"><![CDATA[<p>我最近购买了Astra pro的深度相机，价格地道，就125人民币，另外购买了一个双目摄像头，就30人民币，不过就这样开启了我的学习之路，开心，在下午去学校拿到快递以后异常开心，回到寝室也没干别的事情，一直在测试相机，等把这篇文章发出去还要好好吃顿饭，哈哈哈........</p>
+<p>这个相机大概就是这样：<br>
+<img src="https://biubiuslam.github.io/post-images/1583288338432.jpg" alt="" loading="lazy"><br>
+上面是官方图，下面是真实图：<br>
+<img src="https://biubiuslam.github.io/post-images/1583287768673.jpg" alt="" loading="lazy"><br>
+下图是参数<br>
+<img src="https://biubiuslam.github.io/post-images/1583288348005.jpg" alt="" loading="lazy"><br>
+它支持支持Windows，Android,linux,以及Unity,具体驱动可以访问官方网站: https://orbbec3d.com/download-sdk/</p>
+<h1 id="准备工作">准备工作</h1>
+<h2 id="安装依赖">安装依赖</h2>
+<pre><code class="language-C++">sudo apt install ros-$ROS_DISTRO-rgbd-launch ros-$ROS_DISTRO-libuvc ros-$ROS_DISTRO-libuvc-camera ros-$ROS_DISTRO-libuvc-ros
+</code></pre>
+<p><code>ROS_DISTRO</code>为Ubuntu所安装的ROS系统，替换即可.</p>
+<pre><code class="language-C++">sudo apt install ros-melodic-uvc-camera
+sudo apt-get install build-essential freeglut3 freeglut3-dev
+</code></pre>
+<h2 id="建立工作空间">建立工作空间</h2>
+<pre><code class="language-C++">mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws/
+catkin_make
+</code></pre>
+<h2 id="ros包安装">ROS包安装</h2>
+<pre><code class="language-C++">cd ~/catkin_ws/src
+git clone https://github.com/orbbec/ros_astra_camera
+roscd astra_camera
+sudo sh ./scripts/create_udev_rules
+</code></pre>
+<pre><code class="language-C++">cd ~/catkin_ws
+catkin_make --pkg astra_camera
+</code></pre>
+<p>但是在测试过程中有点小问题，需要解决，得出解决方案如下;</p>
+<h2 id="修改astralaunch的代码">修改astra.launch的代码</h2>
+<pre><code class="language-C++">sudo gedit astra.launch  //需要先转到catkin_ws/src/ros_astra_camera/launch
+</code></pre>
+<p>翻到代码最后面，复制以下代码到“&lt; /launch &gt;”的前面。</p>
+<pre><code class="language-C++">
+&lt;node pkg=&quot;uvc_camera&quot; type=&quot;uvc_camera_node&quot; name=&quot;uvc_camera&quot; output=&quot;screen&quot;   /&gt;
+&lt;param name=&quot;width&quot; type=&quot;int&quot; value=&quot;320&quot; /&gt;
+&lt;param name=&quot;height&quot; type=&quot;int&quot; value=&quot;240&quot; /&gt;
+&lt;param name=&quot;fps&quot; type=&quot;int&quot; value=&quot;30&quot; /&gt;
+&lt;param name=&quot;frame&quot; type=&quot;string&quot; value=&quot;wide_stereo&quot; /&gt;
+
+&lt;param name=&quot;auto_focus&quot; type=&quot;bool&quot; value=&quot;False&quot; /&gt;
+&lt;param name=&quot;focus_absolute&quot; type=&quot;int&quot; value=&quot;0&quot; /&gt;
+&lt;!-- other supported params: auto_exposure, exposure_absolute, brightness, power_line_frequency --&gt;
+
+&lt;param name=&quot;device&quot; type=&quot;string&quot; value=&quot;/dev/video2&quot; /&gt; 
+&lt;param name=&quot;camera_info_url&quot; type=&quot;string&quot; value=&quot;file://$(find uvc_camera)/example.yaml&quot; /&gt;
+</code></pre>
+<h1 id="相机测试">相机测试</h1>
+<pre><code class="language-C++">source ~/catkin_ws/devel/setup.bash //建议在bashrc中提前写入，这样就不需要每次source一次
+</code></pre>
+<pre><code class="language-C++">roslaunch astra_camera astra.launch
+</code></pre>
+<pre><code class="language-C++">rviz  //启动rviz
+</code></pre>
+<p>在rviz启动以后，点击下方“Add”,把image选项添加进去，在 image topic里面选择合适的话题，例如本人电脑是image raw,这样就会显示彩色图像了<br>
+<img src="https://biubiuslam.github.io/post-images/1583288902190.png" alt="" loading="lazy"><br>
+如果深度摄像头不显示RGB图像怎么办？不怕，还有解决办法滴！</p>
+<h2 id="插入相机查看设备向量id">插入相机查看设备向量ID</h2>
+<pre><code class="language-c++">lsusb
+</code></pre>
+<p>然后每个人都会显示一堆device，通过观察分享可知道，其中2bc5:0403是深度模块, 2bc5:0502是RGB模块。(不出意外应该每个人都是这样的)<br>
+然后进入/catkin_ws/src/ros_astra_camera/launch目录下查看astrapro.launch<br>
+我们会发现在大概68行左右，有以下代码（也可以直接Ctrl+F全局搜索0x05，就这一处地方有0x05）</p>
+<pre><code class="language-c++">&lt;param name=&quot;product&quot; value=&quot;0x0501&quot;/&gt;
+</code></pre>
+<p>由于上面device里面有0x0502,这也是我设备，并不是0x0501,所以直接把0x0501改成0x0502</p>
+<pre><code class="language-c++">&lt;param name=&quot;product&quot; value=&quot;0x0502&quot;/&gt;
+</code></pre>
+<p>这样再次启动launch文件并重复上面操作就能显示彩色图像和其他图像了。<br>
+<img src="https://biubiuslam.github.io/post-images/1583289069692.png" alt="" loading="lazy"><br>
+<img src="https://biubiuslam.github.io/post-images/1583289088350.png" alt="" loading="lazy"><br>
+#可选部分<br>
+##OpenNI安装</p>
+<p>去官网下载文件即可，我在Ubuntu18.04上面测试功能。下载好以后有一堆文件夹，有Android、Windows、Linux x64、Linux Arm等，根据本人电脑情况，我保留Linux x64。</p>
+<pre><code class="language-C++">//进入目录以后在终端打开
+export ASTRA_SDK_INCLUDE=~/Astra/install/include
+export ASTRA_SDK_LIB=~/Astra/install/lib
+source ~/.bashrc
+sudo chmod a+x install.sh
+sudo ./install.sh
+</code></pre>
+<p>拔掉相机以后再重新插上相机</p>
+<pre><code class="language-C++">source OpenNIDevEnvironment
+cd Samples/SimpleViewer
+make  
+ cd Bin
+./SimpleViewer
+</code></pre>
+<p>然后就出现下面图片<br>
+<img src="https://biubiuslam.github.io/post-images/1583289446582.png" alt="" loading="lazy"><br>
+在Bin目录下还有其他可以测试一下</p>
+<p><img src="https://biubiuslam.github.io/post-images/1583289462865.png" alt="" loading="lazy"><br>
+总的来说，性价比还不错，我彻底入坑了。这个世界上其实并没有所谓的最正确的选择，而我们也只有更加努力奋斗才能使当初的选择变得正确。</p>
 ]]></content>
     </entry>
 </feed>
