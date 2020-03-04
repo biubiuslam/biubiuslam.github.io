@@ -84,7 +84,7 @@ Pangolin、OpenCV、g2o、PCL、Eigen等........</p>
 <pre><code class="language-c++">git clone https://github.com/biubiuslam/ORB_SLAM2.git
 </code></pre>
 <p>本安装包是适应于 OpenCV4 的ORB_SLAM2包，我已经上传至我的GitHub仓库上面，上面就是我的仓库链接。</p>
-<h1 id="编译">编译</h1>
+<h2 id="编译">编译</h2>
 <p>因为需要配置ROS，所以分为两步，缺一不可，不然报错，如果只是配置一下安装包，只此一步即可。</p>
 <pre><code class="language-c++">cd ORB_SLAM2
 chmod +x build.sh
@@ -95,7 +95,7 @@ export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:~/ORB_SLAM2/Examples/ROS
 ./build_ros.sh
 </code></pre>
 <p>我直接运行第二步，没有运行build.sh. 就会报错。如果机器性能较低，可以将build.sh文件和build_ros.sh文件中的命令<code>make -j</code>改成<code>make</code></p>
-<h1 id="测试">测试</h1>
+<h2 id="测试">测试</h2>
 <pre><code class="language-c++">roscore
 roslaunch usb_cam usb_cam-test.launch
 </code></pre>
@@ -151,10 +151,10 @@ roslaunch usb_cam usb_cam-test.launch
         <ul class="markdownIt-TOC">
 <li><a href="#%E8%83%8C%E6%99%AF">背景</a></li>
 <li><a href="#%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7">安装工具</a></li>
-<li><a href="#orb_slam-2%E7%9A%84%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91">ORB_SLAM 2的安装编译</a></li>
-<li><a href="#%E7%BC%96%E8%AF%91">编译</a></li>
-<li><a href="#%E6%B5%8B%E8%AF%95">测试</a>
+<li><a href="#orb_slam-2%E7%9A%84%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91">ORB_SLAM 2的安装编译</a>
 <ul>
+<li><a href="#%E7%BC%96%E8%AF%91">编译</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95">测试</a></li>
 <li><a href="#%E7%BB%93%E6%9E%9C">结果</a></li>
 </ul>
 </li>
