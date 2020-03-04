@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://biubiuslam.github.io</id>
     <title>SLAM这件小事</title>
-    <updated>2020-03-04T03:33:43.967Z</updated>
+    <updated>2020-03-04T03:36:13.792Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://biubiuslam.github.io"/>
     <link rel="self" href="https://biubiuslam.github.io/atom.xml"/>
@@ -72,7 +72,7 @@ cd ORB_SLAM2
 chmod +x build.sh  
 ./build.sh
 </code></pre>
-<h1 id="运行单目slam实例">运行单目SLAM实例</h1>
+<h2 id="运行单目slam实例">运行单目SLAM实例</h2>
 <p>下面进行测试:<br>
 在http://vision.in.tum.de/data/datasets/rgbd-dataset/download下载一个序列，并解压。<br>
 转到 ORBSLAM2 文件夹下，执行下面的命令。根据下载的视频序列freiburg1、freiburg2 和 freiburg3将TUMX.yaml分别转换为TUM1.yaml与TUM2.yaml与TUM3.yaml.<br>
