@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://biubiuslam.github.io</id>
     <title>SLAM这件小事</title>
-    <updated>2020-03-04T03:40:33.091Z</updated>
+    <updated>2020-03-04T03:41:17.082Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://biubiuslam.github.io"/>
     <link rel="self" href="https://biubiuslam.github.io/atom.xml"/>
@@ -137,7 +137,6 @@ sudo make -j8
 然后把上面改成video2</p>
 <figure data-type="image" tabindex="6"><img src="https://biubiuslam.github.io/post-images/1583291593429.jfif" alt="" loading="lazy"></figure>
 <p>然后就能使用了！</p>
-<figure data-type="image" tabindex="7"><img src="https://biubiuslam.github.io/post-images/1583291634386.jpg" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
     <entry>
