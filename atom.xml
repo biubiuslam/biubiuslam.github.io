@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://biubiuslam.github.io</id>
     <title>SLAM这件小事</title>
-    <updated>2020-03-04T06:10:38.530Z</updated>
+    <updated>2020-03-04T06:37:39.831Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://biubiuslam.github.io"/>
     <link rel="self" href="https://biubiuslam.github.io/atom.xml"/>
@@ -10,6 +10,95 @@
     <logo>https://biubiuslam.github.io/images/avatar.png</logo>
     <icon>https://biubiuslam.github.io/favicon.ico</icon>
     <rights>All rights reserved 2020, SLAM这件小事</rights>
+    <entry>
+        <title type="html"><![CDATA[SLAM初探系列五：常用库的CMake写法]]></title>
+        <id>https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-wu-chang-yong-ku-de-cmake-xie-fa/</id>
+        <link href="https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-wu-chang-yong-ku-de-cmake-xie-fa/">
+        </link>
+        <updated>2020-03-04T06:19:36.000Z</updated>
+        <content type="html"><![CDATA[<p>在学习slam编译自己的工程时需要链接各种库文件和头文件，但是具体在CMakeLists.txt里怎么使用呢？本文就汇总常见SLAM常用库的链接方法以供参考</p>
+<p>##1.添加Eigen头文件<br>
+Eigen通过apt-get安装之后，我们要怎么使用这个依赖库呢？Eigen有一点很奇怪，Eigen库只有头文件，所以我们在CMakeLists.txt中是不需要写target_link_libraries，因为我们是通过apt安装的，所以很容易的知道Eigen库的位置就是在/usr/include/eigen3</p>
+<pre><code class="language-c++">#添加头文件
+include_directories(&quot;/usr/include/eigen3&quot;)
+</code></pre>
+<p>因为我们已经知道Eigen具体的位置，就不用使用find_package来寻找了，虽然有些粗暴，但是简单有效。</p>
+<p>##2.添加Pangolin依赖<br>
+Pangolin的安装也很简单，功能主要就是做三维的可视化显示，主要依赖库是OpenGL，通过apt也很好安装。</p>
+<pre><code class="language-c++">find_package(Pangolin)
+include_directories(${Pangolin_INCLUDE_DIRS})
+add_executable(project_name filename.cpp)
+target_link_libraries(project_name ${Pangolin_LIBRARIES})
+</code></pre>
+<p>##3.添加Sophus依赖<br>
+Sophus实际上是Eigen库的扩展模块，Eigen中虽然有几何模块，但是没有提供李代数的支持，所以Sophus算是一个比较好的李代数库，安装参考之前文章。</p>
+<pre><code class="language-c++">find_package(Sophus REQUIRED)
+include_directories(${Sophus_INCLUDE_DIRS})
+add_executable(project_name project_name.cpp)
+target_link_libraries(project_name ${Sophus_LIBRARIES})
+</code></pre>
+<p>##4.添加OpenCV依赖<br>
+OpenCV经常会出现版本不兼容的问题，我同时安装了OpenCV4和OpenCV3两个版本，所以在CMakeLists.txt要指定OpenCV的版本。</p>
+<pre><code class="language-c++">#指定OpenCV的版本是4.1
+find_package(OpenCV 4.1 REQUIRED)
+include_directories(${OpenCV_INCLUDE_DIRS})
+add_executable(project_name filename.cpp)
+target_link_libraries(project_name ${OpenCV_LIBS})
+</code></pre>
+<p>添加OpenCV要注意一个问题，大小写！很重要！大小写！</p>
+<p>##5.添加PCL依赖<br>
+这个点云库在SLAM应用中还是蛮重要的，通常情况下好像也都有安装，安装很简单，这里还是讲一下CMakeLists.txt中怎么写：</p>
+<pre><code class="language-c++">find_package(PCL REQUIRED COMPONENT common io)
+include_directories(${PCL_INCLUDE_DIRS})
+add_definitions(${PCL_DEFINITIONS})
+target_link_libraries(project_name ${PCL_LIBRARIES})
+</code></pre>
+<p>##6.添加Ceres<br>
+安装依赖</p>
+<pre><code class="language-c++"># CMake
+sudo apt-get install cmake
+# google-glog + gflags
+sudo apt-get install libgoogle-glog-dev
+# BLAS &amp; LAPACK
+sudo apt-get install libatlas-base-dev
+# Eigen3
+sudo apt-get install libeigen3-dev
+# SuiteSparse and CXSparse (optional)
+# - If you want to build Ceres as a *static* library (the default)
+#   you can use the SuiteSparse package in the main Ubuntu package
+#   repository:
+sudo apt-get install libsuitesparse-dev
+</code></pre>
+<p>源码安装</p>
+<pre><code class="language-c++">tar zxf ceres-solver.tar.gz
+mkdir ceres-bin
+cd ceres-bin
+cmake ../ceres-solver
+sudo make -j7
+make test
+# Optionally install Ceres, it can also be exported using CMake which
+# allows Ceres to be used without requiring installation, see the documentation
+# for the EXPORT_BUILD_DIR option for more information.
+sudo make install
+</code></pre>
+<p>CMakeLists写法</p>
+<pre><code class="language-c++">list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+
+# Ceres
+find_package(Ceres REQUIRED)
+include_directories(${CERES_INCLUDE_DIRS})
+</code></pre>
+<p>##7. 图优化之G2O</p>
+<pre><code class="language-c++"> list(APPEND CMAKE_MODULE_PATH  /XXX/g2o/cmake_modules)
+  set(G2O_ROOT /XXX/g2o)
+  find_package( G2O REQUIRED )
+  include_directories(
+        ${G2O_INCLUDE_DIRS}
+        &quot;/usr/include/eigen3&quot; )
+</code></pre>
+<p>上面是模板，XXX代表Ubuntu用户名。XXX/g2o 是你的g2o安装目录</p>
+]]></content>
+    </entry>
     <entry>
         <title type="html"><![CDATA[SLAM初探一：Linux安装OpenCV4]]></title>
         <id>https://biubiuslam.github.io/post/slam-chu-tan-yi-linux-an-zhuang-opencv4/</id>
