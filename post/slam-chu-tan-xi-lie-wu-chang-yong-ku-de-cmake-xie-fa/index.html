@@ -69,27 +69,27 @@ Eigen通过apt-get安装之后，我们要怎么使用这个...">
         </div>
         <div class="markdown mb-8" v-pre>
           <p>在学习slam编译自己的工程时需要链接各种库文件和头文件，但是具体在CMakeLists.txt里怎么使用呢？本文就汇总常见SLAM常用库的链接方法以供参考</p>
-<h2 id="1添加eigen头文件">1.添加Eigen头文件</h2>
+<h1 id="1添加eigen头文件">1.添加Eigen头文件</h1>
 <p>Eigen通过apt-get安装之后，我们要怎么使用这个依赖库呢？Eigen有一点很奇怪，Eigen库只有头文件，所以我们在CMakeLists.txt中是不需要写target_link_libraries，因为我们是通过apt安装的，所以很容易的知道Eigen库的位置就是在/usr/include/eigen3</p>
 <pre><code class="language-c++">#添加头文件
 include_directories(&quot;/usr/include/eigen3&quot;)
 </code></pre>
 <p>因为我们已经知道Eigen具体的位置，就不用使用find_package来寻找了，虽然有些粗暴，但是简单有效。</p>
-<h2 id="2添加pangolin依赖">2.添加Pangolin依赖</h2>
+<h1 id="2添加pangolin依赖">2.添加Pangolin依赖</h1>
 <p>Pangolin的安装也很简单，功能主要就是做三维的可视化显示，主要依赖库是OpenGL，通过apt也很好安装。</p>
 <pre><code class="language-c++">find_package(Pangolin)
 include_directories(${Pangolin_INCLUDE_DIRS})
 add_executable(project_name filename.cpp)
 target_link_libraries(project_name ${Pangolin_LIBRARIES})
 </code></pre>
-<h2 id="3添加sophus依赖">3.添加Sophus依赖</h2>
+<h1 id="3添加sophus依赖">3.添加Sophus依赖</h1>
 <p>Sophus实际上是Eigen库的扩展模块，Eigen中虽然有几何模块，但是没有提供李代数的支持，所以Sophus算是一个比较好的李代数库，安装参考之前文章。</p>
 <pre><code class="language-c++">find_package(Sophus REQUIRED)
 include_directories(${Sophus_INCLUDE_DIRS})
 add_executable(project_name project_name.cpp)
 target_link_libraries(project_name ${Sophus_LIBRARIES})
 </code></pre>
-<h2 id="4添加opencv依赖">4.添加OpenCV依赖</h2>
+<h1 id="4添加opencv依赖">4.添加OpenCV依赖</h1>
 <p>OpenCV经常会出现版本不兼容的问题，我同时安装了OpenCV4和OpenCV3两个版本，所以在CMakeLists.txt要指定OpenCV的版本。</p>
 <pre><code class="language-c++">#指定OpenCV的版本是4.1
 find_package(OpenCV 4.1 REQUIRED)
@@ -98,14 +98,14 @@ add_executable(project_name filename.cpp)
 target_link_libraries(project_name ${OpenCV_LIBS})
 </code></pre>
 <p>添加OpenCV要注意一个问题，大小写！很重要！大小写！</p>
-<h2 id="5添加pcl依赖">5.添加PCL依赖</h2>
+<h1 id="5添加pcl依赖">5.添加PCL依赖</h1>
 <p>这个点云库在SLAM应用中还是蛮重要的，通常情况下好像也都有安装，安装很简单，这里还是讲一下CMakeLists.txt中怎么写：</p>
 <pre><code class="language-c++">find_package(PCL REQUIRED COMPONENT common io)
 include_directories(${PCL_INCLUDE_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 target_link_libraries(project_name ${PCL_LIBRARIES})
 </code></pre>
-<h2 id="6添加ceres">6.添加Ceres</h2>
+<h1 id="6添加ceres">6.添加Ceres</h1>
 <p>安装依赖</p>
 <pre><code class="language-c++"># CMake
 sudo apt-get install cmake
@@ -140,7 +140,7 @@ sudo make install
 find_package(Ceres REQUIRED)
 include_directories(${CERES_INCLUDE_DIRS})
 </code></pre>
-<h2 id="7-图优化之g2o">7. 图优化之G2O</h2>
+<h1 id="7-图优化之g2o">7. 图优化之G2O</h1>
 <pre><code class="language-c++"> list(APPEND CMAKE_MODULE_PATH  /XXX/g2o/cmake_modules)
   set(G2O_ROOT /XXX/g2o)
   find_package( G2O REQUIRED )
@@ -190,8 +190,6 @@ include_directories(${CERES_INCLUDE_DIRS})
       </div>
       <div class="post-toc-container">
         <ul class="markdownIt-TOC">
-<li>
-<ul>
 <li><a href="#1%E6%B7%BB%E5%8A%A0eigen%E5%A4%B4%E6%96%87%E4%BB%B6">1.添加Eigen头文件</a></li>
 <li><a href="#2%E6%B7%BB%E5%8A%A0pangolin%E4%BE%9D%E8%B5%96">2.添加Pangolin依赖</a></li>
 <li><a href="#3%E6%B7%BB%E5%8A%A0sophus%E4%BE%9D%E8%B5%96">3.添加Sophus依赖</a></li>
@@ -199,8 +197,6 @@ include_directories(${CERES_INCLUDE_DIRS})
 <li><a href="#5%E6%B7%BB%E5%8A%A0pcl%E4%BE%9D%E8%B5%96">5.添加PCL依赖</a></li>
 <li><a href="#6%E6%B7%BB%E5%8A%A0ceres">6.添加Ceres</a></li>
 <li><a href="#7-%E5%9B%BE%E4%BC%98%E5%8C%96%E4%B9%8Bg2o">7. 图优化之G2O</a></li>
-</ul>
-</li>
 </ul>
 
       </div>
