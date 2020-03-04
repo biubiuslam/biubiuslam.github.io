@@ -71,7 +71,7 @@ ORB-SLAM是由Raul Mur-Artal，J. M. M. Montiel和Juan D. Tardos于2015年发表
           <h1 id="背景">背景</h1>
 <p>ORB-SLAM是由Raul Mur-Artal，J. M. M. Montiel和Juan D. Tardos于2015年发表在IEEE Transactions on Robotics。ORB-SLAM是一个基于特征点的实时单目SLAM系统，在大规模的、小规模的、室内室外的环境都可以运行。该系统对剧烈运动也很鲁棒，支持宽基线的闭环检测和重定位，包括全自动初始化。该系统包含了所有SLAM系统共有的模块：跟踪（Tracking）、建图（Mapping）、重定位（Relocalization）、闭环检测（Loop closing）。由于ORB-SLAM系统是基于特征点的SLAM系统，故其能够实时计算出相机的轨线，并生成场景的稀疏三维重建结果。ORB-SLAM2在ORB-SLAM的基础上，还支持标定后的双目相机和RGB-D相机。<br>
 接下来介绍一下ORB_SLAM2使用ROS的配置过程。</p>
-<p>#安装工具</p>
+<h1 id="安装工具">安装工具</h1>
 <p>在配置过程中需要cmake、gcc、g++和Git工具。可在终端通过以下命令下载。</p>
 <pre><code class="language-c++"> sudo apt-get install cmake
  sudo apt-get install git
@@ -79,13 +79,13 @@ ORB-SLAM是由Raul Mur-Artal，J. M. M. Montiel和Juan D. Tardos于2015年发表
 </code></pre>
 <p>依赖：<br>
 Pangolin、OpenCV、g2o、PCL、Eigen等........</p>
-<p>#ORB_SLAM 2的安装编译<br>
-选择放置ORB_SLAM2工程的文件夹（如果需要在ROS环境下运行ORB_SLAM，最好将工程放在catkin_ws/src文件夹下），在该文件夹中打开终端，执行一下命令：</p>
+<h1 id="orb_slam-2的安装编译">ORB_SLAM 2的安装编译</h1>
+<p>选择放置ORB_SLAM2工程的文件夹（如果需要在ROS环境下运行ORB_SLAM，最好将工程放在catkin_ws/src文件夹下），在该文件夹中打开终端，执行一下命令：</p>
 <pre><code class="language-c++">git clone https://github.com/biubiuslam/ORB_SLAM2.git
 </code></pre>
-<p>本安装包是适应于 OpenCV4 的ORB_SLAM2包，我已经上传至我的GitHub仓库上面，上面就是我的仓库链接。<br>
-#编译<br>
-因为需要配置ROS，所以分为两步，缺一不可，不然报错，如果只是配置一下安装包，只此一步即可。</p>
+<p>本安装包是适应于 OpenCV4 的ORB_SLAM2包，我已经上传至我的GitHub仓库上面，上面就是我的仓库链接。</p>
+<h1 id="编译">编译</h1>
+<p>因为需要配置ROS，所以分为两步，缺一不可，不然报错，如果只是配置一下安装包，只此一步即可。</p>
 <pre><code class="language-c++">cd ORB_SLAM2
 chmod +x build.sh
 ./build.sh
@@ -94,8 +94,8 @@ chmod +x build.sh
 export ROS_PACKAGE_PATH=${ROS_PACKAGE_PATH}:~/ORB_SLAM2/Examples/ROS
 ./build_ros.sh
 </code></pre>
-<p>我直接运行第二步，没有运行build.sh. 就会报错。如果机器性能较低，可以将build.sh文件和build_ros.sh文件中的命令<code>make -j</code>改成<code>make</code><br>
-#测试</p>
+<p>我直接运行第二步，没有运行build.sh. 就会报错。如果机器性能较低，可以将build.sh文件和build_ros.sh文件中的命令<code>make -j</code>改成<code>make</code></p>
+<h1 id="测试">测试</h1>
 <pre><code class="language-c++">roscore
 roslaunch usb_cam usb_cam-test.launch
 </code></pre>
@@ -149,7 +149,11 @@ roslaunch usb_cam usb_cam-test.launch
       </div>
       <div class="post-toc-container">
         <ul class="markdownIt-TOC">
-<li><a href="#%E8%83%8C%E6%99%AF">背景</a>
+<li><a href="#%E8%83%8C%E6%99%AF">背景</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85%E5%B7%A5%E5%85%B7">安装工具</a></li>
+<li><a href="#orb_slam-2%E7%9A%84%E5%AE%89%E8%A3%85%E7%BC%96%E8%AF%91">ORB_SLAM 2的安装编译</a></li>
+<li><a href="#%E7%BC%96%E8%AF%91">编译</a></li>
+<li><a href="#%E6%B5%8B%E8%AF%95">测试</a>
 <ul>
 <li><a href="#%E7%BB%93%E6%9E%9C">结果</a></li>
 </ul>
