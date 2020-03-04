@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://biubiuslam.github.io</id>
     <title>SLAM这件小事</title>
-    <updated>2020-03-04T02:47:07.107Z</updated>
+    <updated>2020-03-04T02:55:46.157Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://biubiuslam.github.io"/>
     <link rel="self" href="https://biubiuslam.github.io/atom.xml"/>
@@ -58,13 +58,13 @@ sudo sh -c 'echo &quot;/usr/local/lib&quot; &gt; opencv4.conf'
         </link>
         <updated>2019-12-04T12:40:34.000Z</updated>
         <content type="html"><![CDATA[<p>我最近购买了Astra pro的深度相机，价格地道，就125人民币，另外购买了一个双目摄像头，就30人民币，不过就这样开启了我的学习之路，开心，在下午去学校拿到快递以后异常开心，回到寝室也没干别的事情，一直在测试相机，等把这篇文章发出去还要好好吃顿饭，哈哈哈........</p>
-<p>这个相机大概就是这样：<br>
-<img src="https://biubiuslam.github.io/post-images/1583288338432.jpg" alt="" loading="lazy"><br>
-上面是官方图，下面是真实图：<br>
-<img src="https://biubiuslam.github.io/post-images/1583287768673.jpg" alt="" loading="lazy"><br>
-下图是参数<br>
-<img src="https://biubiuslam.github.io/post-images/1583288348005.jpg" alt="" loading="lazy"><br>
-它支持支持Windows，Android,linux,以及Unity,具体驱动可以访问官方网站: https://orbbec3d.com/download-sdk/</p>
+<p>这个相机大概就是这样：</p>
+<figure data-type="image" tabindex="1"><img src="https://biubiuslam.github.io/post-images/1583288338432.jpg" alt="" loading="lazy"></figure>
+<p>上面是官方图，下面是真实图：</p>
+<figure data-type="image" tabindex="2"><img src="https://biubiuslam.github.io/post-images/1583287768673.jpg" alt="" loading="lazy"></figure>
+<p>下图是参数</p>
+<figure data-type="image" tabindex="3"><img src="https://biubiuslam.github.io/post-images/1583288348005.jpg" alt="" loading="lazy"></figure>
+<p>它支持支持Windows，Android,linux,以及Unity,具体驱动可以访问官方网站: https://orbbec3d.com/download-sdk/</p>
 <h1 id="准备工作">准备工作</h1>
 <h2 id="安装依赖">安装依赖</h2>
 <pre><code class="language-C++">sudo apt install ros-$ROS_DISTRO-rgbd-launch ros-$ROS_DISTRO-libuvc ros-$ROS_DISTRO-libuvc-camera ros-$ROS_DISTRO-libuvc-ros
@@ -113,9 +113,9 @@ catkin_make --pkg astra_camera
 </code></pre>
 <pre><code class="language-C++">rviz  //启动rviz
 </code></pre>
-<p>在rviz启动以后，点击下方“Add”,把image选项添加进去，在 image topic里面选择合适的话题，例如本人电脑是image raw,这样就会显示彩色图像了<br>
-<img src="https://biubiuslam.github.io/post-images/1583288902190.png" alt="" loading="lazy"><br>
-如果深度摄像头不显示RGB图像怎么办？不怕，还有解决办法滴！</p>
+<p>在rviz启动以后，点击下方“Add”,把image选项添加进去，在 image topic里面选择合适的话题，例如本人电脑是image raw,这样就会显示彩色图像了</p>
+<figure data-type="image" tabindex="4"><img src="https://biubiuslam.github.io/post-images/1583288902190.png" alt="" loading="lazy"></figure>
+<p>如果深度摄像头不显示RGB图像怎么办？不怕，还有解决办法滴！</p>
 <h2 id="插入相机查看设备向量id">插入相机查看设备向量ID</h2>
 <pre><code class="language-c++">lsusb
 </code></pre>
@@ -127,11 +127,11 @@ catkin_make --pkg astra_camera
 <p>由于上面device里面有0x0502,这也是我设备，并不是0x0501,所以直接把0x0501改成0x0502</p>
 <pre><code class="language-c++">&lt;param name=&quot;product&quot; value=&quot;0x0502&quot;/&gt;
 </code></pre>
-<p>这样再次启动launch文件并重复上面操作就能显示彩色图像和其他图像了。<br>
-<img src="https://biubiuslam.github.io/post-images/1583289069692.png" alt="" loading="lazy"><br>
-<img src="https://biubiuslam.github.io/post-images/1583289088350.png" alt="" loading="lazy"><br>
-#可选部分<br>
-##OpenNI安装</p>
+<p>这样再次启动launch文件并重复上面操作就能显示彩色图像和其他图像了。</p>
+<p><img src="https://biubiuslam.github.io/post-images/1583289069692.png" alt="" loading="lazy"><br>
+<img src="https://biubiuslam.github.io/post-images/1583289088350.png" alt="" loading="lazy"></p>
+<h1 id="可选部分">可选部分</h1>
+<h2 id="openni安装">OpenNI安装</h2>
 <p>去官网下载文件即可，我在Ubuntu18.04上面测试功能。下载好以后有一堆文件夹，有Android、Windows、Linux x64、Linux Arm等，根据本人电脑情况，我保留Linux x64。</p>
 <pre><code class="language-C++">//进入目录以后在终端打开
 export ASTRA_SDK_INCLUDE=~/Astra/install/include
@@ -147,11 +147,11 @@ make
  cd Bin
 ./SimpleViewer
 </code></pre>
-<p>然后就出现下面图片<br>
-<img src="https://biubiuslam.github.io/post-images/1583289446582.png" alt="" loading="lazy"><br>
-在Bin目录下还有其他可以测试一下</p>
-<p><img src="https://biubiuslam.github.io/post-images/1583289462865.png" alt="" loading="lazy"><br>
-总的来说，性价比还不错，我彻底入坑了。这个世界上其实并没有所谓的最正确的选择，而我们也只有更加努力奋斗才能使当初的选择变得正确。</p>
+<p>然后就出现下面图片</p>
+<figure data-type="image" tabindex="5"><img src="https://biubiuslam.github.io/post-images/1583289446582.png" alt="" loading="lazy"></figure>
+<p>在Bin目录下还有其他可以测试一下</p>
+<figure data-type="image" tabindex="6"><img src="https://biubiuslam.github.io/post-images/1583289462865.png" alt="" loading="lazy"></figure>
+<p>总的来说，性价比还不错，我彻底入坑了。这个世界上其实并没有所谓的最正确的选择，而我们也只有更加努力奋斗才能使当初的选择变得正确。</p>
 ]]></content>
     </entry>
 </feed>
