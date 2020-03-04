@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://biubiuslam.github.io</id>
     <title>SLAM这件小事</title>
-    <updated>2020-03-04T03:17:04.938Z</updated>
+    <updated>2020-03-04T03:23:54.217Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://biubiuslam.github.io"/>
     <link rel="self" href="https://biubiuslam.github.io/atom.xml"/>
@@ -49,94 +49,6 @@ sudo sh -c 'echo &quot;/usr/local/lib&quot; &gt; opencv4.conf'
 <p>之后可以在终端输入<strong>pkg-config --libs opencv4</strong>和<strong>pkg-config --cflags opencv4</strong>检验一下是否安装成功。</p>
 <h2 id="opencv的卸载">OpenCV的卸载</h2>
 <p>删掉opencv4.conf文件，然后在源码包下的build文件夹下运行<strong>sudo make uinstall</strong>即可。</p>
-]]></content>
-    </entry>
-    <entry>
-        <title type="html"><![CDATA[SLAM初探系列三：ORB_SLAM2的编译、测试]]></title>
-        <id>https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-san-orb_slam2-de-bian-yi-ce-shi/</id>
-        <link href="https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-san-orb_slam2-de-bian-yi-ce-shi/">
-        </link>
-        <updated>2019-12-08T09:05:29.000Z</updated>
-        <content type="html"><![CDATA[<h1 id="介绍">介绍</h1>
-<p>ORB-SLAM2是一套完整的SLAM方案，提供了单目，双目和RGB-D三种接口。它能够实现地图重用，回环检测和重新定位的功能。无论是在室内的小型手持设备，还是到工厂环境的无人机和城市里驾驶的汽车，ORB-SLAM2都能够在标准的CPU上进行实时工作。ORB-SLAM2在后端上采用的是基于单目和双目的光束法平差优化（BA）的方式，这个方法允许米制比例尺的轨迹精确度评估。此外，ORB-SLAM2包含一个轻量级的定位模式，该模式能够在允许零点漂移的条件下，利用视觉里程计来追踪未建图的区域并且匹配特征点。可以说，ORB_SLAM2是近几年SLAM的集大成者，它吸收了近几年monoslam领域的很多理论成果，比如逆深度的使用，g2o工具箱的优化等。而且以orb特征贯穿始终，从一开始的特征处理，匹配，以及用于回环的bag-of-words，词典，全用的是orb。缺点在于它的的建图部分只含有稀疏的map point，这不仅让最终建的图很难看，而且对于机器人下一步的应用会造成很大困难。</p>
-<h1 id="前期工作">前期工作</h1>
-<p>提前安装好 vim、cmake、git、gcc、g++、ROS、OpenCV、Eigen、Pangolin等</p>
-<h1 id="源码安装">源码安装</h1>
-<pre><code class="language-C++">cd catkin_ws/src
-git clone https://github.com/raulmur/ORB_SLAM2.git 
-cd ORB_SLAM2
-</code></pre>
-<p>打开并编译build.sh文件,将最后一行编译连接ORB-SLAM2的 make -j 改为make -j4 （这个随意，只是多线程运行，看个人电脑状况了）<br>
-执行 <code>build.sh</code></p>
-<pre><code class="language-c++">//赋予权限
-chmod +x build.sh  
-./build.sh
-</code></pre>
-<p>#运行单目SLAM实例<br>
-下面进行测试</p>
-<p>在http://vision.in.tum.de/data/datasets/rgbd-dataset/download下载一个序列，并解压。转到 ORBSLAM2 文件夹下，执行下面的命令。根据下载的视频序列freiburg1、freiburg2 和 freiburg3将TUMX.yaml分别转换为TUM1.yaml与TUM2.yaml与TUM3.yaml<br>
-将PATH_TO_SEQUENCE_FOLDER更改为解压的视频序列文件夹。<br>
-GitHub上给出的命令执行格式：</p>
-<pre><code class="language-C++">./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txtExamples/Monocular/TUMX.yaml PATH_TO_SEQUENCE_FOLDER
-</code></pre>
-<p>在我的电脑里命令如下：</p>
-<pre><code class="language-c++">./Examples/Monocular/mono_tumVocabulary/ORBvoc.txt Examples/Monocular/TUM1.yaml /home/robot/rgbd_dataset_freiburg1_desk
-</code></pre>
-<p>下面就会闪出视频，截图如下:<br>
-<img src="https://biubiuslam.github.io/post-images/1583291197672.jfif" alt="" loading="lazy"><br>
-还会保留一些信息在终端上面:<br>
-<img src="https://biubiuslam.github.io/post-images/1583291220725.jfif" alt="" loading="lazy"><br>
-#USB_CAM安装<br>
-下载usb_cam源码并配置环境</p>
-<pre><code class="language-c++">cd catkin_ws/src
-git clone https://github.com/bosch-ros-pkg/usb_cam.git
-cd ..
-catkin_make
-source ~/catkin-ws/devel/setup.bash
-</code></pre>
-<p><img src="https://biubiuslam.github.io/post-images/1583291319284.jfif" alt="" loading="lazy"><br>
-编译usb_cam</p>
-<pre><code class="language-c++">cd usb_cam
-mkdir build
-cd build
-cmake ..
-sudo make -j8
-</code></pre>
-<p>#测试USB摄像头<br>
-打开新的终端，运行roscore<br>
-先进入launch文件夹，然后在终端里面运行usb_cam中的launch文件，如果可以成功运行并看到图像则说明安装成功</p>
-<pre><code class="language-c++">roslaunch usb_cam usb_cam-test.launch
-</code></pre>
-<p>如果不成功运行怎么办？<br>
-该usb_cam-test.launch是usb_cam中自带的launch文件，打开之后内容如下：</p>
-<pre><code class="language-c++">&lt;launch&gt;
-  &lt;node name=&quot;usb_cam&quot; pkg=&quot;usb_cam&quot; type=&quot;usb_cam_node&quot; output=&quot;screen&quot; &gt;
-    &lt;param name=&quot;video_device&quot; value=&quot;/dev/video0&quot; /&gt;
-    &lt;param name=&quot;image_width&quot; value=&quot;640&quot; /&gt;
-    &lt;param name=&quot;image_height&quot; value=&quot;480&quot; /&gt;
-    &lt;param name=&quot;pixel_format&quot; value=&quot;yuyv&quot; /&gt;
-    &lt;param name=&quot;camera_frame_id&quot; value=&quot;usb_cam&quot; /&gt;
-    &lt;param name=&quot;io_method&quot; value=&quot;mmap&quot;/&gt;
-  &lt;/node&gt;
-  &lt;node name=&quot;image_view&quot; pkg=&quot;image_view&quot; type=&quot;image_view&quot; respawn=&quot;false&quot; output=&quot;screen&quot;&gt;
-    &lt;remap from=&quot;image&quot; to=&quot;/usb_cam/image_raw&quot;/&gt;
-    &lt;param name=&quot;autosize&quot; value=&quot;true&quot; /&gt;
-  &lt;/node&gt;
-&lt;/launch&gt;
-</code></pre>
-<p>代码块第三行：value=&quot;/dev/video0&quot; ,这个video0指的是我们当前运行的是设备是video0，如果不显示图片可能是没有正确设置设备。<br>
-我们可以使用命令查看设备</p>
-<pre><code class="language-c++">ls /dev/video*
-</code></pre>
-<p>比如我的电脑如下:</p>
-<figure data-type="image" tabindex="1"><img src="https://biubiuslam.github.io/post-images/1583291504402.png" alt="" loading="lazy"></figure>
-<p>拔掉相机以后显示如下:</p>
-<figure data-type="image" tabindex="2"><img src="https://biubiuslam.github.io/post-images/1583291529503.png" alt="" loading="lazy"></figure>
-<p>说明相机设备是video2和video3，具体可以测试一下，测试发现是video2<br>
-然后把上面改成video2<br>
-<img src="https://biubiuslam.github.io/post-images/1583291593429.jfif" alt="" loading="lazy"><br>
-然后就能使用了！</p>
-<figure data-type="image" tabindex="3"><img src="https://biubiuslam.github.io/post-images/1583291634386.jpg" alt="" loading="lazy"></figure>
 ]]></content>
     </entry>
     <entry>
