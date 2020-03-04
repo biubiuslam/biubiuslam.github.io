@@ -4,28 +4,31 @@
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>SLAM初探系列二: 踩坑Astra Pro - SLAM这件小事</title>
+<title>SLAM初探系列三：ORB_SLAM2的编译、测试 - SLAM这件小事</title>
 <link rel="shortcut icon" href="https://biubiuslam.github.io/favicon.ico">
 <link href="https://cdn.jsdelivr.net/npm/remixicon@2.2.0/fonts/remixicon.css" rel="stylesheet">
 <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.7.2/animate.min.css"> -->
 <link rel="stylesheet" href="https://biubiuslam.github.io/media/css/tailwind.css">
 <link rel="stylesheet" href="https://biubiuslam.github.io/styles/main.css">
-<link rel="alternate" type="application/atom+xml" title="SLAM初探系列二: 踩坑Astra Pro - SLAM这件小事 - Atom Feed" href="https://biubiuslam.github.io/atom.xml">
+<link rel="alternate" type="application/atom+xml" title="SLAM初探系列三：ORB_SLAM2的编译、测试 - SLAM这件小事 - Atom Feed" href="https://biubiuslam.github.io/atom.xml">
 
     
 
-  <meta name="description" content="我最近购买了Astra pro的深度相机，价格地道，就125人民币，另外购买了一个双目摄像头，就30人民币，不过就这样开启了我的学习之路，开心，在下午去学校拿到快递以后异常开心，回到寝室也没干别的事情，一直在测试相机，等把这篇文章发出去还要..." />
-  <meta property="og:title" content="SLAM初探系列二: 踩坑Astra Pro - SLAM这件小事">
-  <meta property="og:description" content="我最近购买了Astra pro的深度相机，价格地道，就125人民币，另外购买了一个双目摄像头，就30人民币，不过就这样开启了我的学习之路，开心，在下午去学校拿到快递以后异常开心，回到寝室也没干别的事情，一直在测试相机，等把这篇文章发出去还要..." />
+  <meta name="description" content="介绍
+ORB-SLAM2是一套完整的SLAM方案，提供了单目，双目和RGB-D三种接口。它能够实现地图重用，回环检测和重新定位的功能。无论是在室内的小型手持设备，还是到工厂环境的无人机和城市里驾驶的汽车，ORB-SLAM2都能够在标准的CP..." />
+  <meta property="og:title" content="SLAM初探系列三：ORB_SLAM2的编译、测试 - SLAM这件小事">
+  <meta property="og:description" content="介绍
+ORB-SLAM2是一套完整的SLAM方案，提供了单目，双目和RGB-D三种接口。它能够实现地图重用，回环检测和重新定位的功能。无论是在室内的小型手持设备，还是到工厂环境的无人机和城市里驾驶的汽车，ORB-SLAM2都能够在标准的CP..." />
   <meta property="og:type" content="articles">
-  <meta property="og:url" content="https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-er-cai-keng-astra-pro/" />
-  <meta property="og:image" content="https://biubiuslam.github.io/post-images/slam-chu-tan-xi-lie-er-cai-keng-astra-pro.jpg">
+  <meta property="og:url" content="https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-san-orb_slam2-de-bian-yi-ce-shi/" />
+  <meta property="og:image" content="https://biubiuslam.github.io/post-images/slam-chu-tan-xi-lie-san-orb_slam2-de-bian-yi-ce-shi.jfif">
   <meta property="og:image:height" content="630">
   <meta property="og:image:width" content="1200">
-  <meta name="twitter:title" content="SLAM初探系列二: 踩坑Astra Pro - SLAM这件小事">
-  <meta name="twitter:description" content="我最近购买了Astra pro的深度相机，价格地道，就125人民币，另外购买了一个双目摄像头，就30人民币，不过就这样开启了我的学习之路，开心，在下午去学校拿到快递以后异常开心，回到寝室也没干别的事情，一直在测试相机，等把这篇文章发出去还要...">
+  <meta name="twitter:title" content="SLAM初探系列三：ORB_SLAM2的编译、测试 - SLAM这件小事">
+  <meta name="twitter:description" content="介绍
+ORB-SLAM2是一套完整的SLAM方案，提供了单目，双目和RGB-D三种接口。它能够实现地图重用，回环检测和重新定位的功能。无论是在室内的小型手持设备，还是到工厂环境的无人机和城市里驾驶的汽车，ORB-SLAM2都能够在标准的CP...">
   <meta name="twitter:card" content="summary_large_image">
-  <link rel="canonical" href="https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-er-cai-keng-astra-pro/">
+  <link rel="canonical" href="https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-san-orb_slam2-de-bian-yi-ce-shi/">
 
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css">
@@ -47,13 +50,13 @@
     <div class="max-w-4xl w-full mx-auto">
       <div class="shadow-box bg-white dark:bg-gray-600 rounded-lg pt-32 md:pt-64 px-4 md:px-8 pb-8 animated fadeIn mb-8">
         <h1 class="text-5xl font-semibold leading-normal pb-8 mb-8 border-b-8 border-gray-700">
-          SLAM初探系列二: 踩坑Astra Pro
+          SLAM初探系列三：ORB_SLAM2的编译、测试
         </h1>
         
-          <img src="https://biubiuslam.github.io/post-images/slam-chu-tan-xi-lie-er-cai-keng-astra-pro.jpg" alt="SLAM初探系列二: 踩坑Astra Pro" class="block w-full mb-8">
+          <img src="https://biubiuslam.github.io/post-images/slam-chu-tan-xi-lie-san-orb_slam2-de-bian-yi-ce-shi.jfif" alt="SLAM初探系列三：ORB_SLAM2的编译、测试" class="block w-full mb-8">
         
         <div class="mb-8 flex flex-wrap">
-          <div class="text-gray-400 text-sm mr-4">2019-12-04 · 5 min read</div>
+          <div class="text-gray-400 text-sm mr-4">2019-12-08 · 5 min read</div>
           
             <a href="https://biubiuslam.github.io/tag/OkCwijF5T/" class="text-gray-700 text-sm border-b-2 border-dotted border-gray-200 hover:border-gray-600 transition-all duration-100 inline-flex mr-2">
               <i class="ri-hashtag"></i>
@@ -62,101 +65,86 @@
           
         </div>
         <div class="markdown mb-8" v-pre>
-          <p>我最近购买了Astra pro的深度相机，价格地道，就125人民币，另外购买了一个双目摄像头，就30人民币，不过就这样开启了我的学习之路，开心，在下午去学校拿到快递以后异常开心，回到寝室也没干别的事情，一直在测试相机，等把这篇文章发出去还要好好吃顿饭，哈哈哈........</p>
-<p>这个相机大概就是这样：</p>
-<figure data-type="image" tabindex="1"><img src="https://biubiuslam.github.io/post-images/1583288338432.jpg" alt="" loading="lazy"></figure>
-<p>上面是官方图，下面是真实图：</p>
-<figure data-type="image" tabindex="2"><img src="https://biubiuslam.github.io/post-images/1583287768673.jpg" alt="" loading="lazy"></figure>
-<p>下图是参数</p>
-<figure data-type="image" tabindex="3"><img src="https://biubiuslam.github.io/post-images/1583288348005.jpg" alt="" loading="lazy"></figure>
-<p>它支持支持Windows，Android,linux,以及Unity,具体驱动可以访问官方网站: https://orbbec3d.com/download-sdk/</p>
-<h1 id="准备工作">准备工作</h1>
-<h2 id="安装依赖">安装依赖</h2>
-<pre><code class="language-C++">sudo apt install ros-$ROS_DISTRO-rgbd-launch ros-$ROS_DISTRO-libuvc ros-$ROS_DISTRO-libuvc-camera ros-$ROS_DISTRO-libuvc-ros
+          <h1 id="介绍">介绍</h1>
+<p>ORB-SLAM2是一套完整的SLAM方案，提供了单目，双目和RGB-D三种接口。它能够实现地图重用，回环检测和重新定位的功能。无论是在室内的小型手持设备，还是到工厂环境的无人机和城市里驾驶的汽车，ORB-SLAM2都能够在标准的CPU上进行实时工作。ORB-SLAM2在后端上采用的是基于单目和双目的光束法平差优化（BA）的方式，这个方法允许米制比例尺的轨迹精确度评估。此外，ORB-SLAM2包含一个轻量级的定位模式，该模式能够在允许零点漂移的条件下，利用视觉里程计来追踪未建图的区域并且匹配特征点。可以说，ORB_SLAM2是近几年SLAM的集大成者，它吸收了近几年monoslam领域的很多理论成果，比如逆深度的使用，g2o工具箱的优化等。而且以orb特征贯穿始终，从一开始的特征处理，匹配，以及用于回环的bag-of-words，词典，全用的是orb。缺点在于它的的建图部分只含有稀疏的map point，这不仅让最终建的图很难看，而且对于机器人下一步的应用会造成很大困难。</p>
+<h1 id="前期工作">前期工作</h1>
+<p>提前安装好 vim、cmake、git、gcc、g++、ROS、OpenCV、Eigen、Pangolin等</p>
+<h1 id="源码安装">源码安装</h1>
+<pre><code class="language-C++">cd catkin_ws/src
+git clone https://github.com/raulmur/ORB_SLAM2.git 
+cd ORB_SLAM2
 </code></pre>
-<p><code>$ROS_DISTRO</code>为Ubuntu所安装的ROS系统，替换即可.</p>
-<pre><code class="language-C++">sudo apt install ros-melodic-uvc-camera
-sudo apt-get install build-essential freeglut3 freeglut3-dev
+<p>打开并编译build.sh文件,将最后一行编译连接ORB-SLAM2的 make -j 改为make -j4 （这个随意，只是多线程运行，看个人电脑状况了）<br>
+执行 <code>build.sh</code></p>
+<pre><code class="language-c++">//赋予权限
+chmod +x build.sh  
+./build.sh
 </code></pre>
-<h2 id="建立工作空间">建立工作空间</h2>
-<pre><code class="language-C++">mkdir -p ~/catkin_ws/src
-cd ~/catkin_ws/
+<p>#运行单目SLAM实例<br>
+下面进行测试</p>
+<p>在http://vision.in.tum.de/data/datasets/rgbd-dataset/download下载一个序列，并解压。转到 ORBSLAM2 文件夹下，执行下面的命令。根据下载的视频序列freiburg1、freiburg2 和 freiburg3将TUMX.yaml分别转换为TUM1.yaml与TUM2.yaml与TUM3.yaml<br>
+将PATH_TO_SEQUENCE_FOLDER更改为解压的视频序列文件夹。<br>
+GitHub上给出的命令执行格式：</p>
+<pre><code class="language-C++">./Examples/Monocular/mono_tum Vocabulary/ORBvoc.txtExamples/Monocular/TUMX.yaml PATH_TO_SEQUENCE_FOLDER
+</code></pre>
+<p>在我的电脑里命令如下：</p>
+<pre><code class="language-c++">./Examples/Monocular/mono_tumVocabulary/ORBvoc.txt Examples/Monocular/TUM1.yaml /home/robot/rgbd_dataset_freiburg1_desk
+</code></pre>
+<p>下面就会闪出视频，截图如下:<br>
+<img src="https://biubiuslam.github.io/post-images/1583291197672.jfif" alt="" loading="lazy"><br>
+还会保留一些信息在终端上面:<br>
+<img src="https://biubiuslam.github.io/post-images/1583291220725.jfif" alt="" loading="lazy"><br>
+#USB_CAM安装<br>
+下载usb_cam源码并配置环境</p>
+<pre><code class="language-c++">cd catkin_ws/src
+git clone https://github.com/bosch-ros-pkg/usb_cam.git
+cd ..
 catkin_make
+source ~/catkin-ws/devel/setup.bash
 </code></pre>
-<h2 id="ros包安装">ROS包安装</h2>
-<pre><code class="language-C++">cd ~/catkin_ws/src
-git clone https://github.com/orbbec/ros_astra_camera
-roscd astra_camera
-sudo sh ./scripts/create_udev_rules
+<p><img src="https://biubiuslam.github.io/post-images/1583291319284.jfif" alt="" loading="lazy"><br>
+编译usb_cam</p>
+<pre><code class="language-c++">cd usb_cam
+mkdir build
+cd build
+cmake ..
+sudo make -j8
 </code></pre>
-<pre><code class="language-C++">cd ~/catkin_ws
-catkin_make --pkg astra_camera
+<p>#测试USB摄像头<br>
+打开新的终端，运行roscore<br>
+先进入launch文件夹，然后在终端里面运行usb_cam中的launch文件，如果可以成功运行并看到图像则说明安装成功</p>
+<pre><code class="language-c++">roslaunch usb_cam usb_cam-test.launch
 </code></pre>
-<p>但是在测试过程中有点小问题，需要解决，得出解决方案如下;</p>
-<h2 id="修改astralaunch的代码">修改astra.launch的代码</h2>
-<pre><code class="language-C++">sudo gedit astra.launch  //需要先转到catkin_ws/src/ros_astra_camera/launch
+<p>如果不成功运行怎么办？<br>
+该usb_cam-test.launch是usb_cam中自带的launch文件，打开之后内容如下：</p>
+<pre><code class="language-c++">&lt;launch&gt;
+  &lt;node name=&quot;usb_cam&quot; pkg=&quot;usb_cam&quot; type=&quot;usb_cam_node&quot; output=&quot;screen&quot; &gt;
+    &lt;param name=&quot;video_device&quot; value=&quot;/dev/video0&quot; /&gt;
+    &lt;param name=&quot;image_width&quot; value=&quot;640&quot; /&gt;
+    &lt;param name=&quot;image_height&quot; value=&quot;480&quot; /&gt;
+    &lt;param name=&quot;pixel_format&quot; value=&quot;yuyv&quot; /&gt;
+    &lt;param name=&quot;camera_frame_id&quot; value=&quot;usb_cam&quot; /&gt;
+    &lt;param name=&quot;io_method&quot; value=&quot;mmap&quot;/&gt;
+  &lt;/node&gt;
+  &lt;node name=&quot;image_view&quot; pkg=&quot;image_view&quot; type=&quot;image_view&quot; respawn=&quot;false&quot; output=&quot;screen&quot;&gt;
+    &lt;remap from=&quot;image&quot; to=&quot;/usb_cam/image_raw&quot;/&gt;
+    &lt;param name=&quot;autosize&quot; value=&quot;true&quot; /&gt;
+  &lt;/node&gt;
+&lt;/launch&gt;
 </code></pre>
-<p>翻到代码最后面，复制以下代码到“&lt; /launch &gt;”的前面。</p>
-<pre><code class="language-C++">
-&lt;node pkg=&quot;uvc_camera&quot; type=&quot;uvc_camera_node&quot; name=&quot;uvc_camera&quot; output=&quot;screen&quot;   /&gt;
-&lt;param name=&quot;width&quot; type=&quot;int&quot; value=&quot;320&quot; /&gt;
-&lt;param name=&quot;height&quot; type=&quot;int&quot; value=&quot;240&quot; /&gt;
-&lt;param name=&quot;fps&quot; type=&quot;int&quot; value=&quot;30&quot; /&gt;
-&lt;param name=&quot;frame&quot; type=&quot;string&quot; value=&quot;wide_stereo&quot; /&gt;
-
-&lt;param name=&quot;auto_focus&quot; type=&quot;bool&quot; value=&quot;False&quot; /&gt;
-&lt;param name=&quot;focus_absolute&quot; type=&quot;int&quot; value=&quot;0&quot; /&gt;
-&lt;!-- other supported params: auto_exposure, exposure_absolute, brightness, power_line_frequency --&gt;
-
-&lt;param name=&quot;device&quot; type=&quot;string&quot; value=&quot;/dev/video2&quot; /&gt; 
-&lt;param name=&quot;camera_info_url&quot; type=&quot;string&quot; value=&quot;file://$(find uvc_camera)/example.yaml&quot; /&gt;
+<p>代码块第三行：value=&quot;/dev/video0&quot; ,这个video0指的是我们当前运行的是设备是video0，如果不显示图片可能是没有正确设置设备。<br>
+我们可以使用命令查看设备</p>
+<pre><code class="language-c++">ls /dev/video*
 </code></pre>
-<h1 id="相机测试">相机测试</h1>
-<pre><code class="language-C++">source ~/catkin_ws/devel/setup.bash //建议在bashrc中提前写入，这样就不需要每次source一次
-</code></pre>
-<pre><code class="language-C++">roslaunch astra_camera astra.launch
-</code></pre>
-<pre><code class="language-C++">rviz  //启动rviz
-</code></pre>
-<p>在rviz启动以后，点击下方“Add”,把image选项添加进去，在 image topic里面选择合适的话题，例如本人电脑是image raw,这样就会显示彩色图像了</p>
-<figure data-type="image" tabindex="4"><img src="https://biubiuslam.github.io/post-images/1583288902190.png" alt="" loading="lazy"></figure>
-<p>如果深度摄像头不显示RGB图像怎么办？不怕，还有解决办法滴！</p>
-<h2 id="插入相机查看设备向量id">插入相机查看设备向量ID</h2>
-<pre><code class="language-c++">lsusb
-</code></pre>
-<p>然后每个人都会显示一堆device，通过观察分享可知道，其中2bc5:0403是深度模块, 2bc5:0502是RGB模块。(不出意外应该每个人都是这样的)<br>
-然后进入/catkin_ws/src/ros_astra_camera/launch目录下查看astrapro.launch<br>
-我们会发现在大概68行左右，有以下代码（也可以直接Ctrl+F全局搜索0x05，就这一处地方有0x05）</p>
-<pre><code class="language-c++">&lt;param name=&quot;product&quot; value=&quot;0x0501&quot;/&gt;
-</code></pre>
-<p>由于上面device里面有0x0502,这也是我设备，并不是0x0501,所以直接把0x0501改成0x0502</p>
-<pre><code class="language-c++">&lt;param name=&quot;product&quot; value=&quot;0x0502&quot;/&gt;
-</code></pre>
-<p>这样再次启动launch文件并重复上面操作就能显示彩色图像和其他图像了。</p>
-<p><img src="https://biubiuslam.github.io/post-images/1583289069692.png" alt="" loading="lazy"><br>
-<img src="https://biubiuslam.github.io/post-images/1583289088350.png" alt="" loading="lazy"></p>
-<h1 id="可选部分">可选部分</h1>
-<h2 id="openni安装">OpenNI安装</h2>
-<p>去官网下载文件即可，我在Ubuntu18.04上面测试功能。下载好以后有一堆文件夹，有Android、Windows、Linux x64、Linux Arm等，根据本人电脑情况，我保留Linux x64。</p>
-<pre><code class="language-C++">//进入目录以后在终端打开
-export ASTRA_SDK_INCLUDE=~/Astra/install/include
-export ASTRA_SDK_LIB=~/Astra/install/lib
-source ~/.bashrc
-sudo chmod a+x install.sh
-sudo ./install.sh
-</code></pre>
-<p>拔掉相机以后再重新插上相机</p>
-<pre><code class="language-C++">source OpenNIDevEnvironment
-cd Samples/SimpleViewer
-make  
- cd Bin
-./SimpleViewer
-</code></pre>
-<p>然后就出现下面图片</p>
-<figure data-type="image" tabindex="5"><img src="https://biubiuslam.github.io/post-images/1583289446582.png" alt="" loading="lazy"></figure>
-<p>在Bin目录下还有其他可以测试一下</p>
-<figure data-type="image" tabindex="6"><img src="https://biubiuslam.github.io/post-images/1583289462865.png" alt="" loading="lazy"></figure>
-<p>总的来说，性价比还不错，我彻底入坑了。这个世界上其实并没有所谓的最正确的选择，而我们也只有更加努力奋斗才能使当初的选择变得正确。</p>
+<p>比如我的电脑如下:</p>
+<figure data-type="image" tabindex="1"><img src="https://biubiuslam.github.io/post-images/1583291504402.png" alt="" loading="lazy"></figure>
+<p>拔掉相机以后显示如下:</p>
+<figure data-type="image" tabindex="2"><img src="https://biubiuslam.github.io/post-images/1583291529503.png" alt="" loading="lazy"></figure>
+<p>说明相机设备是video2和video3，具体可以测试一下，测试发现是video2<br>
+然后把上面改成video2<br>
+<img src="https://biubiuslam.github.io/post-images/1583291593429.jfif" alt="" loading="lazy"><br>
+然后就能使用了！</p>
+<figure data-type="image" tabindex="3"><img src="https://biubiuslam.github.io/post-images/1583291634386.jpg" alt="" loading="lazy"></figure>
 
         </div>
         <!-- Share to Twitter, Weibo, Telegram -->
@@ -198,24 +186,9 @@ make
       </div>
       <div class="post-toc-container">
         <ul class="markdownIt-TOC">
-<li><a href="#%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C">准备工作</a>
-<ul>
-<li><a href="#%E5%AE%89%E8%A3%85%E4%BE%9D%E8%B5%96">安装依赖</a></li>
-<li><a href="#%E5%BB%BA%E7%AB%8B%E5%B7%A5%E4%BD%9C%E7%A9%BA%E9%97%B4">建立工作空间</a></li>
-<li><a href="#ros%E5%8C%85%E5%AE%89%E8%A3%85">ROS包安装</a></li>
-<li><a href="#%E4%BF%AE%E6%94%B9astralaunch%E7%9A%84%E4%BB%A3%E7%A0%81">修改astra.launch的代码</a></li>
-</ul>
-</li>
-<li><a href="#%E7%9B%B8%E6%9C%BA%E6%B5%8B%E8%AF%95">相机测试</a>
-<ul>
-<li><a href="#%E6%8F%92%E5%85%A5%E7%9B%B8%E6%9C%BA%E6%9F%A5%E7%9C%8B%E8%AE%BE%E5%A4%87%E5%90%91%E9%87%8Fid">插入相机查看设备向量ID</a></li>
-</ul>
-</li>
-<li><a href="#%E5%8F%AF%E9%80%89%E9%83%A8%E5%88%86">可选部分</a>
-<ul>
-<li><a href="#openni%E5%AE%89%E8%A3%85">OpenNI安装</a></li>
-</ul>
-</li>
+<li><a href="#%E4%BB%8B%E7%BB%8D">介绍</a></li>
+<li><a href="#%E5%89%8D%E6%9C%9F%E5%B7%A5%E4%BD%9C">前期工作</a></li>
+<li><a href="#%E6%BA%90%E7%A0%81%E5%AE%89%E8%A3%85">源码安装</a></li>
 </ul>
 
       </div>
