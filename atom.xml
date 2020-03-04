@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://biubiuslam.github.io</id>
     <title>SLAM这件小事</title>
-    <updated>2020-03-04T06:39:26.883Z</updated>
+    <updated>2020-03-04T06:41:35.079Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://biubiuslam.github.io"/>
     <link rel="self" href="https://biubiuslam.github.io/atom.xml"/>
@@ -138,6 +138,86 @@ include_directories(${CERES_INCLUDE_DIRS})
         &quot;/usr/include/eigen3&quot; )
 </code></pre>
 <p>上面是模板，XXX代表Ubuntu用户名。XXX/g2o 是你的g2o安装目录</p>
+]]></content>
+    </entry>
+    <entry>
+        <title type="html"><![CDATA[SLAM初探系列四：再探Astra Pro]]></title>
+        <id>https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-si-zai-tan-astra-pro/</id>
+        <link href="https://biubiuslam.github.io/post/slam-chu-tan-xi-lie-si-zai-tan-astra-pro/">
+        </link>
+        <updated>2019-12-25T11:11:06.000Z</updated>
+        <content type="html"><![CDATA[<p>前几天Ubuntu18.04系统坏了，重新安装系统以后发现Astra相机运行不了，参考SKAM初探文章发现运行不了，折腾了几天以后发现解决方案，算是再次踩坑吧，下面总结一下：</p>
+<h2 id="安装依赖">安装依赖</h2>
+<p>这次比上次多安装一些可能需要的东西，看个人情况而定。</p>
+<pre><code class="language-C++">sudo apt-get install build-essential freeglut3 freeglut3-dev
+sudo apt-get install ros-melodic-openni-*
+</code></pre>
+<h2 id="安装ros包">安装ROS包</h2>
+<p>安装astra_camera和astra_launch</p>
+<pre><code class="language-C++">sudo apt-get install ros-indigo-astra-camera ros-indigo-astra-launch  
+</code></pre>
+<pre><code class="language-c++">mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws/
+catkin_make
+cd ~/catkin_ws/src
+git clone https://github.com/orbbec/ros_astra_camera
+git clone https://github.com/orbbec/ros_astra_launch
+
+cd ~/catkin_ws
+catkin_make --pkg astra_camera
+</code></pre>
+<h2 id="修改astralaunch的代码">修改astra.launch的代码</h2>
+<p>cd 到/catkin_ws/src/ros_astra_camera/launch<br>
+直接到翻到最后面，复制以下代码到“&lt; /launch &gt;”的前面。</p>
+<pre><code class="language-c++">&lt;node pkg=&quot;uvc_camera&quot; type=&quot;uvc_camera_node&quot; name=&quot;uvc_camera&quot; output=&quot;screen&quot;   /&gt;
+&lt;param name=&quot;width&quot; type=&quot;int&quot; value=&quot;320&quot; /&gt;
+&lt;param name=&quot;height&quot; type=&quot;int&quot; value=&quot;240&quot; /&gt;
+&lt;param name=&quot;fps&quot; type=&quot;int&quot; value=&quot;30&quot; /&gt;
+&lt;param name=&quot;frame&quot; type=&quot;string&quot; value=&quot;wide_stereo&quot; /&gt;
+
+&lt;param name=&quot;auto_focus&quot; type=&quot;bool&quot; value=&quot;False&quot; /&gt;
+&lt;param name=&quot;focus_absolute&quot; type=&quot;int&quot; value=&quot;0&quot; /&gt;
+&lt;!-- other supported params: auto_exposure, exposure_absolute, brightness, power_line_frequency --&gt;
+
+&lt;param name=&quot;device&quot; type=&quot;string&quot; value=&quot;/dev/video2&quot; /&gt; 
+&lt;param name=&quot;camera_info_url&quot; type=&quot;string&quot; value=&quot;file://$(find uvc_camera)/example.yaml&quot; /&gt;
+</code></pre>
+<p>这里的video需要查看自己的相机对应的video，正常情况下video0和1是电脑自带的，video2是外接的USB设备，比如相机。插入相机查看设备向量ID，可用命令<code>lsusb</code>查看，其中2bc5:0403是深度模块，2bc5:0502是RGB模块。<br>
+启动文件在<br>
+～/catkin_ws/src/ros_astra_camera/launch<br>
+我这里是astrapro.launch文件<br>
+把图中的0501改成0502.</p>
+<h2 id="libuvc和libuvc_ros安装">libuvc和libuvc_ros安装</h2>
+<p>RGB的正确显示需要UVC支持，安装libuvc和libuvc_ros</p>
+<pre><code class="language-c++">cd ~
+git clone https://github.com/ktossell/libuvc
+cd libuvc
+mkdir build
+cd build
+cmake ..
+make &amp;&amp; sudo make install
+</code></pre>
+<p>安装libuvc_ros</p>
+<pre><code class="language-c++">cd ~/uvc_ws/src
+git clone https://github.com/ktossell/libuvc_ros
+cd ..
+catkin_make 
+</code></pre>
+<h2 id="启动">启动</h2>
+<pre><code class="language-c++">source ~/catkin_ws/devel/setup.bash
+roslaunch astra_camera astra.launch
+</code></pre>
+<p>可启动rqt_view来查看RGB等各种类型图片</p>
+<pre><code class="language-c++">rqt_image_view
+</code></pre>
+<figure data-type="image" tabindex="1"><img src="https://biubiuslam.github.io/post-images/1583301538195.jpg" alt="" loading="lazy"></figure>
+<p>启动rviz查看</p>
+<figure data-type="image" tabindex="2"><img src="https://biubiuslam.github.io/post-images/1583301547341.jpg" alt="" loading="lazy"></figure>
+<p>上面是寝室内部的一张深度图，哈哈哈!</p>
+<h2 id="关于usb_cam">关于usb_cam</h2>
+<p>还可以使用usb_cam:<br>
+https://github.com/bosch-ros-pkg/usb_cam.git<br>
+过程类似，就是astra.launch插入代码的时候，把里面的节点信息uvc_camera改成usb_cam，基本就能运行起来了。</p>
 ]]></content>
     </entry>
     <entry>
